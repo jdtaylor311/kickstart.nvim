@@ -152,6 +152,31 @@ vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- [[ Indentation ]] ---------------------------------------------------------
+-- By default Neovim uses a tabstop/shiftwidth of 8 which can look very wide.
+-- We standardize to 2-space indentation (common for Lua & many web langs).
+-- If you prefer 4, change the values below to 4.
+-- NOTE: The plugin `guess-indent.nvim` (declared in the plugin specs) will
+-- attempt to detect indentation per file and may override these *per-buffer*.
+-- It will only change them if it is confident; these act as the fallback.
+vim.o.expandtab = true      -- Insert spaces instead of literal <Tab>
+vim.o.tabstop = 2           -- Visual width of tabs
+vim.o.shiftwidth = 2        -- Indent width for >> << == autoindent
+vim.o.softtabstop = 2       -- How many spaces a <Tab> counts for in insert mode
+vim.o.smartindent = true    -- Smart autoindenting on new lines
+
+-- Optional: enforce for certain filetypes even if guess-indent guesses otherwise
+-- Uncomment if you want to force 2 spaces always
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = '*',
+--   callback = function()
+--     vim.bo.shiftwidth = 2
+--     vim.bo.tabstop = 2
+--     vim.bo.softtabstop = 2
+--     vim.bo.expandtab = true
+--   end,
+-- })
+
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
 
