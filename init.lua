@@ -723,6 +723,8 @@ require('lazy').setup({
             },
           },
         },
+        -- Nix language server (Mason package: 'nil', lspconfig server: 'nil_ls')
+        nil_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -740,7 +742,12 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua', -- Lua
+        'isort', 'black', -- Python
+        'prettierd', 'prettier', -- JS/TS/JSON/YAML/Markdown
+        'shfmt', -- Shell
+        'nil', -- Nix LSP
+        'alejandra', 'nixfmt', -- Nix formatters (alejandra preferred, nixfmt fallback)
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -793,11 +800,17 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        python = { 'isort', 'black' }, -- run isort then black
+        -- Use prettierd if available (fast) else fall back to prettier
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        yaml = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'prettierd', 'prettier', stop_after_first = true },
+        sh = { 'shfmt' },
+        nix = { 'alejandra', 'nixfmt', stop_after_first = true },
       },
     },
   },
